@@ -112,6 +112,10 @@
     }
     
     function transaksiPoSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Saving Data...'
+        });
         $('#fm-transaksi_po').form('submit',{
             url: url,
             onSubmit: function(){
@@ -119,8 +123,8 @@
             },
             success: function(result){
                 var result = eval('('+result+')');
-                if(result.success) 
-                {
+                if(result.success) {
+                    $.messager.progress('close');
                     $('#dlg-transaksi_po').dialog('close');
                     transaksiPoRefresh();
                     $.messager.show({
@@ -128,8 +132,8 @@
                         msg     : '<div class="messager-icon messager-info"></div><div>Data Berhasil Disimpan</div>'
                     });
                 }
-                else
-                {
+                else{
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Disimpan !</div>'+result.error
@@ -141,21 +145,25 @@
     }
         
     function transaksiPoHapus(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Deleting Data...'
+        });
         var row = $('#grid-transaksi_po').datagrid('getSelected');
         if (row){
             var win = $.messager.confirm('Konfirmasi','Anda yakin ingin menghapus Id \n'+row.t_po_item+' ?',function(r){
                 if (r){
                     $.post('<?php echo site_url('transaksi/po/delete'); ?>',{t_po_item:row.t_po_item},function(result){
-                        if (result.success)
-                        {
+                        if (result.success){
+                            $.messager.progress('close');
                             transaksiPoRefresh();
                             $.messager.show({
                                 title   : 'Info',
                                 msg     : '<div class="messager-icon messager-info"></div><div>Data Berhasil Dihapus</div>'
                             });
                         }
-                        else
-                        {
+                        else{
+                            $.messager.progress('close');
                             $.messager.show({
                                 title   : 'Error',
                                 msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Dihapus !</div>'+result.error
@@ -180,6 +188,10 @@
     }
     
     function transaksiPoUploadSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Uploading Data...'
+        });
         $('#fm-transaksi_po-upload').form('submit',{
             url: urls,
             onSubmit: function(){   
@@ -188,6 +200,7 @@
             success: function(result){
                 var result = eval('('+result+')');
                 if(result.success){
+                    $.messager.progress('close');
                     $('#dlg-transaksi_po-upload').dialog('close');
                     transaksiPoRefresh();
                     $.messager.show({
@@ -196,6 +209,7 @@
                     });
                 } 
                 else {
+                    $.messager.progress('close');
                     $.messager.show({
                         title   : 'Error',
                         msg     : 'Upload Data Gagal'

@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');?>
-
+   
 <style type="text/css">
     #fm-dialog_proses{
         margin:0;
@@ -42,22 +42,26 @@
             <label for="type">Nama Barang</label>
             <input type="text" id="proc_item" name="proc_item" style="width:250px;" class="easyui-combobox" required="true"
                 data-options="url:'<?php echo site_url('transaksi/proses/getItem'); ?>',
-                method:'get', valueField:'m_item_id', textField:'m_item_name', panelHeight:'150'"/>
+                method:'get', valueField:'m_item_id', textField:'m_item_name', panelHeight:'150',
+                onSelect: function(rec){
+                    $('#qty_ok').next().find('input').focus();
+                }"/>
         </div>
         <div class="fitem">
             <label for="type">Qty Pcs OK</label>
-            <input type="text" id="qty_ok" name="qty_ok" style="width:150px;" class="easyui-numberbox" precision="0" />
+            <input id="qty_ok" name="qty_ok" style="width:150px;" class="easyui-numberbox" precision="0" data-options="groupSeparator:','"/>
         </div>
         <div class="fitem">
             <label for="type">Qty Pcs NG</label>
-            <input type="text" id="qty_ng" name="qty_ng" style="width:150px;" class="easyui-numberbox" precision="0" />
+            <input id="qty_ng" name="qty_ng" style="width:150px;" class="easyui-numberbox" precision="0" data-options="groupSeparator:','"/>
         </div>
-        <div class="fitem">
+    <!--     <div class="fitem">
             <label for="type">Note</label>
             <input type="text" id="reason" name="reason" style="width:150px;" class="easyui-combobox"
                 data-options="url:'<?php echo site_url('transaksi/proses/getReason'); ?>',
                 method:'get', valueField:'m_reason_id', textField:'m_reason_txt', panelHeight:'150'"/>
-        </div>
+        </div> 
+    -->
     </form>
 
 <!-- Dialog Button -->
@@ -68,7 +72,34 @@
 
 
 <script type="text/javascript">
+    $('#qty_ok').numberbox({
+        inputEvents: $.extend({}, $.fn.numberbox.defaults.inputEvents, {
+            keypress: function(e){
+                var result = $.fn.numberbox.defaults.inputEvents.keypress.call(this, e);
+                if (e.keyCode == 13){
+                    $('#qty_ng').next().find('input').focus();
+                }
+                return result;
+            }
+        })
+    });
+    $('#qty_ng').numberbox({
+        inputEvents: $.extend({}, $.fn.numberbox.defaults.inputEvents, {
+            keypress: function(e){
+                var result = $.fn.numberbox.defaults.inputEvents.keypress.call(this, e);
+                if (e.keyCode == 13){
+                    transaksiProsesSave();
+                }
+                return result;
+            }
+        })
+    });
+    
     function transaksiProsesSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Saving Data...'
+        });
         $('#fm-dialog_proses').form('submit',{
             url: '<?php echo site_url('transaksi/proses/create'); ?>',
             onSubmit: function(){
@@ -78,6 +109,7 @@
                 var result = eval('('+result+')');
                 if(result.success){
                    // $('#dlg-dialog_proses').dialog('close');
+                    $.messager.progress('close');
                     transaksiProsesRefresh();
                     $.messager.show({
                         title   : 'Info',
@@ -85,6 +117,7 @@
                     });
                 }
                 else {
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Disimpan !</div>'+result.error
@@ -96,8 +129,8 @@
     }
     
     function transaksiProsesRefresh(){
-        $('#process_2').combobox('setValue', '');
-        $('#proc_item').combobox('setValue', '');
+        //$('#process_2').combobox('setValue', '');
+        //$('#proc_item').combobox('setValue', '');
         $('#qty_ok').numberbox('setValue', '');
         $('#qty_ng').numberbox('setValue', '');
         $('#reason').combobox('setValue', '');

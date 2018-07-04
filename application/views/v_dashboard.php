@@ -25,7 +25,7 @@ $(function () {
             crosshair: true
         },
         yAxis: {
-            min: 0,
+            //min: 0,
             title: {
                 text: 'Pcs'
             }

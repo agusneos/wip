@@ -77,7 +77,7 @@ class M_rekap extends CI_Model
             }
 	}
         
-        $this->db->select('t_proc_item, m_item_name, m_process_cat_name, t_proc_qty, a_user_name, t_proc_time');
+        $this->db->select('t_proc_id, t_proc_item, m_item_name, m_process_cat_name, t_proc_qty, a_user_name, t_proc_time');
         $this->db->join(self::$table1, 't_proc_item=m_item_id', 'left')
                  ->join(self::$table3, 't_proc_proc=m_process_cat_id', 'left')
                  ->join(self::$table4, 't_proc_user=a_user_id', 'left');
@@ -85,12 +85,13 @@ class M_rekap extends CI_Model
                  ->where('t_proc_stat', 'OK')
                  ->where('t_proc_qty > 0')
                  ->where('t_proc_proc', $proses)
-                 ->where('t_proc_user', $user)
+                 //->where('t_proc_user', $user)
                  ->where('DATE(t_proc_time) >=', $tgl_from)
                  ->where('DATE(t_proc_time) <=', $tgl_to);
+        //$this->db->order_by('t_proc_time', 'ASC');
         $total  = $this->db->count_all_results(self::$table2);
         
-        $this->db->select('t_proc_item, m_item_name, m_process_cat_name, t_proc_qty, a_user_name, t_proc_time');
+        $this->db->select('t_proc_id, t_proc_item, m_item_name, m_process_cat_name, t_proc_qty, a_user_name, t_proc_time');
         $this->db->join(self::$table1, 't_proc_item=m_item_id', 'left')
                  ->join(self::$table3, 't_proc_proc=m_process_cat_id', 'left')
                  ->join(self::$table4, 't_proc_user=a_user_id', 'left');;
@@ -98,9 +99,10 @@ class M_rekap extends CI_Model
                  ->where('t_proc_stat', 'OK')
                  ->where('t_proc_qty > 0')
                  ->where('t_proc_proc', $proses)
-                 ->where('t_proc_user', $user)
+                 //->where('t_proc_user', $user)
                  ->where('DATE(t_proc_time) >=', $tgl_from)
                  ->where('DATE(t_proc_time) <=', $tgl_to);
+        //$this->db->order_by('t_proc_time', 'ASC');
         $this->db->order_by($sort, $order);
         $this->db->limit($rows, $offset);
         $query  = $this->db->get(self::$table2);
@@ -116,6 +118,16 @@ class M_rekap extends CI_Model
 	$result['rows'] = $data;
         
         return json_encode($result);
+    }
+    
+    function delete($t_proc_time){
+        $query = $this->db->delete(self::$table2, array('t_proc_time' => $t_proc_time));
+        if($query){
+            return json_encode(array('success'=>true));
+        }
+        else{
+            return json_encode(array('success'=>false,'error'=>$this->db->_error_message()));
+        }
     }
     
 }

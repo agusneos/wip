@@ -59,6 +59,10 @@
 
 <script type="text/javascript">
     function transaksiNgSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Saving Data...'
+        });
         $('#fm-dialog_ng').form('submit',{
             url: '<?php echo site_url('transaksi/ng/create'); ?>',
             onSubmit: function(){
@@ -67,6 +71,7 @@
             success: function(result){
                 var result = eval('('+result+')');
                 if(result.success){
+                    $.messager.progress('close');
                     $('#fm-dialog_ng').form('clear');
                     $.messager.show({
                         title   : 'Info',
@@ -74,6 +79,7 @@
                     });
                 }
                 else {
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Disimpan !</div>'+result.error

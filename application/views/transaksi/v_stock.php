@@ -36,7 +36,10 @@
             <label for="type">Nama Barang</label>
             <input type="text" id="item" name="item" style="width:250px;" class="easyui-combobox" required="true"
                 data-options="url:'<?php echo site_url('transaksi/stock/getItem'); ?>',
-                method:'get', valueField:'m_item_id', textField:'m_item_name', panelHeight:'150'"/>
+                method:'get', valueField:'m_item_id', textField:'m_item_name', panelHeight:'150',
+                onSelect: function(rec){
+                    $('#qty').next().find('input').focus();
+                }"/>
         </div>
         <div class="fitem">
             <label for="type">Qty Pcs</label>
@@ -52,7 +55,23 @@
 
 
 <script type="text/javascript">
+    $('#qty').numberbox({
+        inputEvents: $.extend({}, $.fn.numberbox.defaults.inputEvents, {
+            keypress: function(e){
+                var result = $.fn.numberbox.defaults.inputEvents.keypress.call(this, e);
+                if (e.keyCode == 13){
+                    transaksiStockSave();
+                }
+                return result;
+            }
+        })
+    });
+    
     function transaksiStockSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Saving Data...'
+        });
         $('#fm-dialog_stock').form('submit',{
             url: '<?php echo site_url('transaksi/stock/create'); ?>',
             onSubmit: function(){
@@ -62,6 +81,7 @@
                 var result = eval('('+result+')');
                 if(result.success){
                    // $('#dlg-dialog_stock').dialog('close');
+                    $.messager.progress('close');
                     transaksiStockRefresh();
                     $.messager.show({
                         title   : 'Info',
@@ -69,6 +89,7 @@
                     });
                 }
                 else {
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Disimpan !</div>'+result.error

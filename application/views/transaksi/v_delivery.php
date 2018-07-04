@@ -41,6 +41,10 @@
 
 <script type="text/javascript">
     function transaksiDeliveryUploadSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Uploading Data...'
+        });
         $('#fm-transaksi_delivery-upload').form('submit',{
             url: '<?php echo site_url('transaksi/delivery/upload'); ?>/',
             onSubmit: function(){   
@@ -49,6 +53,7 @@
             success: function(result){
                 var result = eval('('+result+')');
                 if(result.success){
+                    $.messager.progress('close');
                     $('#dlg-transaksi_delivery-upload').dialog('close');
                     //transaksiDeliveryRefresh();
                     $.messager.show({
@@ -57,6 +62,7 @@
                     });
                 } 
                 else {
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Diupload !</div>'+result.error

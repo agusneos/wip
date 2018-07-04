@@ -38,7 +38,8 @@ class Proses extends CI_Controller {
         $proc_item  = addslashes($_POST['proc_item']); 
         $qty_ok     = addslashes($_POST['qty_ok']);
         $qty_ng     = addslashes($_POST['qty_ng']);
-        $reason     = addslashes($_POST['reason']);
+        //$reason     = addslashes($_POST['reason']);
+        $reason     = 0;
         $opr        = $this->session->userdata('id');
         
         if($process_2==''){

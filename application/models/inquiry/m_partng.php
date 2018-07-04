@@ -16,8 +16,7 @@ class M_mutasi extends CI_Model
         $this->db->select('m_item_name, m_process_cat_name, t_proc_stat, Qty');
         $this->db->join(self::$table3, 't_proc_item=m_item_id', 'left')
                  ->join(self::$table4, 't_proc_proc=m_process_cat_id', 'left');
-        $this->db->order_by('t_proc_proc', 'ASC')
-                 ->order_by('t_proc_stat', 'DESC');
+        //$this->db->order_by('t_proc_proc', 'ASC');
         $query  = $this->db->get(self::$table2);
                    
         $data = array();
@@ -48,7 +47,6 @@ class M_mutasi extends CI_Model
         $this->db->join(self::$table3, 't_proc_item=m_item_id', 'left')
                  ->join(self::$table4, 't_proc_proc=m_process_cat_id', 'left');
         $this->db->where('t_proc_stat', 'NG');
-        $this->db->order_by('t_proc_proc ASC');
         $query  = $this->db->get(self::$table2);
                    
         $data = array();

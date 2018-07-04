@@ -42,12 +42,12 @@
             <label for="type">Qty Pcs</label>
             <input type="text" id="qty_ng" name="qty_ng" style="width:150px;" class="easyui-numberbox" required="true" precision="0"/>
         </div>
-        <div class="fitem">
+  <!--      <div class="fitem">
             <label for="type">Note</label>
             <input type="text" id="reason" name="reason" style="width:150px;" class="easyui-combobox" required="true"
                 data-options="url:'<?php echo site_url('transaksi/scrap/getReason'); ?>',
                 method:'get', valueField:'m_reason_id', textField:'m_reason_txt', panelHeight:'150'"/>
-        </div>
+        </div> -->
     </form>
 
 <!-- Dialog Button -->
@@ -59,6 +59,10 @@
 
 <script type="text/javascript">
     function transaksiScrapSave(){
+        $.messager.progress({
+            title:'Please wait',
+            msg:'Saving Data...'
+        });
         $('#fm-dialog_scrap').form('submit',{
             url: '<?php echo site_url('transaksi/scrap/create'); ?>',
             onSubmit: function(){
@@ -67,6 +71,7 @@
             success: function(result){
                 var result = eval('('+result+')');
                 if(result.success){
+                    $.messager.progress('close');
                     $('#fm-dialog_scrap').form('clear');
                     $.messager.show({
                         title   : 'Info',
@@ -74,6 +79,7 @@
                     });
                 }
                 else {
+                    $.messager.progress('close');
                     var win = $.messager.show({
                         title   : 'Error',
                         msg     : '<div class="messager-icon messager-error"></div><div>Data Gagal Disimpan !</div>'+result.error

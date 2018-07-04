@@ -26,6 +26,16 @@ class Rekap extends CI_Controller {
             $this->load->view('inquiry/rekap/v_rekap_barang');
         }
     }
+    
+    function delete(){
+        if(!isset($_POST))	
+            show_404();
+
+        $t_proc_time          = addslashes($_POST['t_proc_time']);
+        
+        echo $this->record->delete($t_proc_time);
+        
+    }
         
 }
 

@@ -32,7 +32,8 @@ class Scrap extends CI_Controller {
         $process    = addslashes($_POST['process']);
         $item       = addslashes($_POST['item']); 
         $qty_ng     = addslashes($_POST['qty_ng']);
-        $reason     = addslashes($_POST['reason']);
+        //$reason     = addslashes($_POST['reason']);
+        $reason     = 2;
         $opr        = $this->session->userdata('id');
                            
         echo $this->record->create($process, $item, $qty_ng, $reason, $opr);
